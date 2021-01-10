@@ -12,8 +12,8 @@ import com.google.gson.GsonBuilder;
 public class Requests {
     private String url;
 
-    public Requests(String url) {
-        this.url = url;
+    public Requests(String url, String courseContext) {
+        this.url = url + courseContext;
     }
 
     public String getUrl() {

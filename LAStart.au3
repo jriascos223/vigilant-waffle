@@ -32,7 +32,7 @@ Next
 
 Send("{ENTER}")
 
-WinWaitActive("Enter meeting password")
+WinWaitActive("Enter meeting passcode")
 Send($passcode & "{TAB}{ENTER}")
 WinWaitActive("Join Audio")
 Send("{TAB}{ENTER}")
