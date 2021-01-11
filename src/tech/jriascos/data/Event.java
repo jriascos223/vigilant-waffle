@@ -40,8 +40,4 @@ public class Event {
     public String getDay() {
         return this.all_day_date;
     }
-
-    public String getDesc() {
-        return this.description;
-    }
 }

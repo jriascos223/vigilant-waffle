@@ -1,4 +1,4 @@
-package tech.jriascos.data;
+package tech.jriascos.controller;
 
 import java.io.*;
 import java.net.*;
@@ -12,8 +12,8 @@ import com.google.gson.GsonBuilder;
 public class Requests {
     private String url;
 
-    public Requests(String url, String courseContext) {
-        this.url = url + courseContext;
+    public Requests(String url) {
+        this.url = url;
     }
 
     public String getUrl() {
@@ -36,6 +36,7 @@ public class Requests {
 
         return sb.toString();
     }
+
 }
 
 //System.out.println(conn.getResponseMessage());
