@@ -18,8 +18,10 @@ Local $classCode = $CmdLine[1]
 Local $passcode = $CmdLine[2]
 
 
+
+
 Run("C:\Users\josep\AppData\Roaming\Zoom\bin\Zoom.exe")
-WinWaitActive("Zoom")
+WinWaitActive("[TITLE:Zoom; CLASS:ZPPTMainFrmWndClassEx]", "")
 WinSetState("[ACTIVE]", "", @SW_MAXIMIZE)
 MouseClick($MOUSE_CLICK_LEFT, 813, 448)
 WinWaitActive("[TITLE:Zoom; CLASS:zWaitHostWndClass]", "")

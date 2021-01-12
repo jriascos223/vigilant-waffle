@@ -2,10 +2,10 @@ package tech.jriascos.data;
 
 public class Day {
     private String day;
-    private String[] course_ids;
+    private Course[] courseday;
 
-    public String[] getCourses() {
-        return this.course_ids;
+    public Course[] getCourses() {
+        return this.courseday;
     }
 
     public String getDay() {

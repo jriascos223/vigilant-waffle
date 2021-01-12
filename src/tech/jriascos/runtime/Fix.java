@@ -2,6 +2,9 @@ package tech.jriascos.runtime;
 
 import java.io.*;
 import java.sql.*;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Locale;
 
 import com.google.gson.Gson;
 
@@ -28,7 +31,16 @@ public class Fix {
             DBUtils.initialize();
         }
 
-        //Event[] dailyCourses = DBUtils.getCourseDay();
+        ArrayList<Event> dailyCourses = DBUtils.getCourseDay();
+
+        for (Event e : dailyCourses) {
+            System.out.println(e.getTitle());
+            System.out.println(e.getStart());
+            System.out.println(e.getEnd());
+        }
+
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+
 
         /* long timestamp = 1610310840000L;
         long millis = timestamp - System.currentTimeMillis();
@@ -40,6 +52,9 @@ public class Fix {
         } catch (InterruptedException e) {
             System.out.println(e);
         } */
+
+        /* DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.parse("2020-10-30"); */
 
 
         
