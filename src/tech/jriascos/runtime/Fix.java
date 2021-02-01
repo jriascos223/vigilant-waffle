@@ -2,6 +2,8 @@ package tech.jriascos.runtime;
 
 import java.io.*;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -34,12 +36,34 @@ public class Fix {
         ArrayList<Event> dailyCourses = DBUtils.getCourseDay();
 
         for (Event e : dailyCourses) {
-            System.out.println(e.getTitle());
-            System.out.println(e.getStart());
-            System.out.println(e.getEnd());
+            System.out.println("Title: " + e.getTitle());
+            System.out.println("Start time: " + e.getStart());
+            System.out.println("End time: " + e.getEnd());
+            System.out.println("_______________");
         }
 
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+        ArrayList<Long> millis = new ArrayList<Long>();
+
+        for (Event e : dailyCourses) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss");
+            try {
+                java.util.Date start = sdf.parse(e.getStart());
+                java.util.Date end = sdf.parse(e.getEnd());
+                millis.add(start.getTime());
+                millis.add(end.getTime());
+            }catch(ParseException f) {
+                f.printStackTrace();
+            }
+            
+        }
+
+        for (Long l : millis) {
+            System.out.println(l);
+        }
+
+        //DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+        
+
 
 
         /* long timestamp = 1610310840000L;

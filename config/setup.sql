@@ -4,9 +4,9 @@ CREATE TABLE IF NOT EXISTS events (
     title TEXT NOT NULL,
     start_at TEXT NOT NULL,
     end_at TEXT NOT NULL,
-    descript TEXT NOT NULL,
-    course_id INTEGER NOT NULL,
-    FOREIGN KEY (course_id) REFERENCES courses (course_id)
+    descript TEXT NOT NULL
+    /*course_id INTEGER NOT NULL*/
+    /*FOREIGN KEY (course_id) REFERENCES courses (course_id)*/
 );
 
 DROP TABLE IF EXISTS courses;

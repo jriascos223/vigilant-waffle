@@ -39,12 +39,3 @@ public class Requests {
 
 }
 
-//System.out.println(conn.getResponseMessage());
-
-        /* Ability limber = new Ability(new Subability("limber", "url"), false, 1);
-        Ability imposter = new Ability(new Subability("imposter", "url"), true, 3);
-        Pokemon test = new Pokemon(new Ability[]{limber, imposter}, 101);
-        String json = gson.toJson(test);
-        System.out.println(json); */
-        /* Pokemon pokemon = gson.fromJson(sb.toString(), Pokemon.class);
-        System.out.println(pokemon.getExperience()); */
