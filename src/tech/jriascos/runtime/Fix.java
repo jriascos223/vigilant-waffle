@@ -15,7 +15,7 @@ import tech.jriascos.controller.Requests;
 import tech.jriascos.controller.DBUtils;
 
 public class Fix {
-    public static void main(String args[]) throws IOException, SQLException {
+    public static void main(String args[]) throws IOException, SQLException, ParseException {
         //this literally just makes it so that I can start the autoit3 script from java
         //code somewhere here eventually is supposed to talk to canvas, fill in database with info, grab proper username and password, and place the values there
         //the numbers and the code are to be replaced with variables
@@ -37,48 +37,46 @@ public class Fix {
 
         for (Event e : dailyCourses) {
             System.out.println("Title: " + e.getTitle());
-            System.out.println("Start time: " + e.getStart());
-            System.out.println("End time: " + e.getEnd());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            java.util.Date start = sdf.parse(e.getStart());
+            String startString = sdf.format(start.getTime() - (18000L * 1000L));
+            System.out.println("Start time: " + startString);
+            java.util.Date end = sdf.parse(e.getEnd());
+            String endString = sdf.format(start.getTime() - (18000L * 1000L));
+            System.out.println("End time: " + endString);
             System.out.println("_______________");
         }
 
-        ArrayList<Long> millis = new ArrayList<Long>();
-
         for (Event e : dailyCourses) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             try {
                 java.util.Date start = sdf.parse(e.getStart());
-                java.util.Date end = sdf.parse(e.getEnd());
-                millis.add(start.getTime());
-                millis.add(end.getTime());
+                //java.util.Date end = sdf.parse(e.getEnd());
+                //millis.add(start.getTime());
+                //millis.add(end.getTime()); 
+                Long startR = (start.getTime() - (18000L * 1000L)) - System.currentTimeMillis();
+                try{
+                    Thread.sleep(startR);
+                    System.out.println("TIME TO JOIN!");
+                    e.joinMeeting();
+                    //Long endR = (end.getTime() - (18000L * 1000L)) - System.currentTimeMillis();
+                    //try{
+                    //    Thread.sleep(endR);
+                    //    System.out.println("TIME TO LEAVE!");
+                    //} catch (InterruptedException f) {
+                    //    f.printStackTrace();
+                    //}
+                } catch(InterruptedException f) {
+                    f.printStackTrace();
+                }
             }catch(ParseException f) {
                 f.printStackTrace();
             }
             
         }
 
-        for (Long l : millis) {
-            System.out.println(l);
-        }
 
-        //DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
-        
-
-
-
-        /* long timestamp = 1610310840000L;
-        long millis = timestamp - System.currentTimeMillis();
-        System.out.println(timestamp);
-        System.out.println(System.currentTimeMillis());
-        try{
-            Thread.sleep(millis);
-            System.out.println("waited until now!");
-        } catch (InterruptedException e) {
-            System.out.println(e);
-        } */
-
-        /* DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate date = LocalDate.parse("2020-10-30"); */
+    
 
 
         

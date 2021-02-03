@@ -71,18 +71,25 @@ public class DBUtils {
                     Event[] courseEvents = gson.fromJson(data, Event[].class);
                     
                     for (Event e : courseEvents) {
-                        PreparedStatement insertion = semester.prepareStatement("INSERT INTO events VALUES (?, ?, ?, ?, ?)");
+                        PreparedStatement insertion = semester.prepareStatement("INSERT INTO events VALUES (?, ?, ?, ?, ?, ?)");
                         insertion.setLong(1, Long.parseLong(e.getId()));
                         insertion.setString(2, e.getTitle().replaceAll("\\s", ""));
                         insertion.setString(3, e.getStart());
                         insertion.setString(4, e.getEnd());
                         //Pattern pattern = Pattern.compile(".*blank\">[^\\d]+([\\d\\s]*).*");  old, and for course calendars
-                        Pattern pattern = Pattern.compile(".*j\\/(\\d+)<.*");
+                        Pattern pattern = Pattern.compile(".*j\\/(\\d+).*");
                         Matcher matcher = pattern.matcher(e.getDescription());
                         if (matcher.matches()) {
                             insertion.setString(5, matcher.group(1));
                         }else {
                             insertion.setString(5, "-1");
+                        }
+                        Pattern pattern2 = Pattern.compile(".*Passcode:(.*);<.*");
+                        Matcher matcher2 = pattern2.matcher(e.getDescription());
+                        if (matcher2.matches()) {
+                            insertion.setString(6, matcher2.group(1));
+                        }else {
+                            insertion.setString(6, "");
                         }
                         
                         insertion.executeUpdate();
@@ -127,8 +134,10 @@ public class DBUtils {
         Calendar calendar = Calendar.getInstance();
         java.util.Date date = calendar.getTime();
         String numericalDate = format1.format(ldt);
+        numericalDate = "2021-02-02";
         //This is for creating a string to compare to the day names in week.json
-        String td = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date); 
+        String td = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date);
+        td = "Tuesday";
 
 
         for (Day d : week) {

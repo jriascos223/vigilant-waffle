@@ -34,8 +34,27 @@ Next
 
 Send("{ENTER}")
 
-WinWaitActive("Enter meeting passcode")
-Send($passcode & "{TAB}{ENTER}")
-WinWaitActive("Join Audio")
-Send("{TAB}{ENTER}")
+Sleep(2000)
+
+ConsoleWrite($passcode)
+
+If WinExists("Enter meeting passcode") Then
+   WinWaitActive("Enter meeting passcode")
+   Send($passcode & "{TAB}{ENTER}")
+   WinWaitActive("Join Audio")
+   Send("{TAB}{ENTER}")
+Else
+   WinWaitActive("Join Audio")
+   Send("{TAB}{ENTER}")
+EndIf
+
+;WinWaitActive("Enter meeting passcode")
+;Send($passcode & "{TAB}{ENTER}")
+;WinWaitActive("Join Audio")
+;Send("{TAB}{ENTER}")
+
+
+
+
+
 
