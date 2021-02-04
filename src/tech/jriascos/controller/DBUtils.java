@@ -134,10 +134,8 @@ public class DBUtils {
         Calendar calendar = Calendar.getInstance();
         java.util.Date date = calendar.getTime();
         String numericalDate = format1.format(ldt);
-        numericalDate = "2021-02-02";
         //This is for creating a string to compare to the day names in week.json
         String td = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date);
-        td = "Tuesday";
 
 
         for (Day d : week) {
