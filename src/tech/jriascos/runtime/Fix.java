@@ -15,26 +15,27 @@ import tech.jriascos.controller.Requests;
 import tech.jriascos.controller.DBUtils;
 
 public class Fix {
+    /**
+     * This is my zoom autojoin using autoit3 for Windows to automate clicking and opening zoom, and the Canvas api for finding events, passwords, and join times.
+     * The proccess is as follows:
+     * 1. Get all the courses and events for the day from the database (which has been populated with the canvas api and my personal calendar.);
+     * 2. Check to see which day of the week it is, then read from json which classes are in that day and make an array from those.
+     * 3. Runs a loop that timesout until each start time for each class, then uses autoit and command line arguments to properly connect with code and passcode.
+     * @param args Command line arguments lmao
+     * @throws IOException
+     * @throws SQLException
+     * @throws ParseException
+     */
     public static void main(String args[]) throws IOException, SQLException, ParseException {
-        //this literally just makes it so that I can start the autoit3 script from java
-        //code somewhere here eventually is supposed to talk to canvas, fill in database with info, grab proper username and password, and place the values there
-        //the numbers and the code are to be replaced with variables
-        /* String meetingid = "209 185 1085";
-        String passcode = "0aD1jm";
-        Runtime.getRuntime().exec("autoit3 LAStart.au3 \"" + meetingid + "\" \"" + passcode + "\"", null, new File("C:\\Users\\josep\\Desktop\\vigilant-waffle")); */
-        //Requests canvas = new Requests("https://canvas.instructure.com/api/v1/calendar_events?access_token=1030~xhdVvx0v89kdnUwcFVGKZHNo6let4P7F7Pj7dlu7lV41fQXoMGSkaPuab4Plz2V1&all_events=1&per_page=100&context_codes[]=" + "course_10300000000040031");
-
-        //Gets all the courses and events and creates database (if not already stored in database, this is done every so often to keep stuff fresh)
-        //gets the appropriate classes for the current day of the week (from DATABASE, makes array or something of event classes)
-        //runs loop which runs script for each event class with a proper parameter (this includes waiting for start and stop)
 
 
         if (DBUtils.checkDB()) {
             DBUtils.initialize();
         }
-
+        
         ArrayList<Event> dailyCourses = DBUtils.getCourseDay();
 
+        //These are today's classes! yaay :(
         for (Event e : dailyCourses) {
             System.out.println("Title: " + e.getTitle());
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -47,6 +48,7 @@ public class Fix {
             System.out.println("_______________");
         }
 
+        //Waiting loop for each class.
         for (Event e : dailyCourses) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             try {
@@ -55,6 +57,9 @@ public class Fix {
                 //millis.add(start.getTime());
                 //millis.add(end.getTime()); 
                 Long startR = (start.getTime() - (18000L * 1000L)) - System.currentTimeMillis();
+                if (startR < 0) {
+                    continue;
+                }
                 try{
                     Thread.sleep(startR);
                     System.out.println("TIME TO JOIN!");

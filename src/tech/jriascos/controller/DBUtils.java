@@ -20,7 +20,19 @@ import tech.jriascos.data.Course;
 import tech.jriascos.data.Day;
 import tech.jriascos.data.Event;
 
+/**
+ * This file is in charge of making connections to the database, as well as setting it up in the first place (in the case that it doesn't exist).
+ * It also populates the database with the courses and the events that the user is taking, by making JSON api calls to the Canvas api.
+ * @author Joseph Riascos
+ */
+
 public class DBUtils {
+    /**
+     * This method sets up the database by reading the config/setup.sql file line for line and splitting it up into commands by the ";" character.
+     * It then populates the created database tables with events and courses with the populateCourses() and populateEvents() methods.
+     * @throws SQLException
+     * @throws IOException
+     */
     public static void initialize() throws SQLException, IOException {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement();
@@ -44,6 +56,12 @@ public class DBUtils {
         populateEvents();
     }
 
+    /**
+     * Fills the database file found in data/semester.db with the courses that the user might be taking. 
+     * Makes an api call to canvas API.
+     * @throws IOException
+     * @throws SQLException
+     */
     public static void populateCourses() throws IOException, SQLException {
         Requests rq = new Requests("https://canvas.instructure.com/api/v1/courses?access_token=1030~xhdVvx0v89kdnUwcFVGKZHNo6let4P7F7Pj7dlu7lV41fQXoMGSkaPuab4Plz2V1&per_page=100");
         String data = rq.makeRequest();
@@ -61,6 +79,12 @@ public class DBUtils {
         }
     }
 
+    /**
+     * Fills the database file found in data/semester.db with the events that the user has in each day.
+     * Makes an api call to canvas API.
+     * @throws IOException
+     * @throws SQLException
+     */
     public static void populateEvents() throws IOException, SQLException {
         //append to end of link to use the course calendars instead of my own personal one
                     //&context_codes[]=course_" + Long.toString(rs.getLong("course_id"))
@@ -71,6 +95,7 @@ public class DBUtils {
                     Event[] courseEvents = gson.fromJson(data, Event[].class);
                     
                     for (Event e : courseEvents) {
+                        System.out.println(e.getDescription());
                         PreparedStatement insertion = semester.prepareStatement("INSERT INTO events VALUES (?, ?, ?, ?, ?, ?)");
                         insertion.setLong(1, Long.parseLong(e.getId()));
                         insertion.setString(2, e.getTitle().replaceAll("\\s", ""));
@@ -108,20 +133,47 @@ public class DBUtils {
         System.out.println("events!");
     }
 
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:sqlite:data/semester.db");
+    /**
+     * Gets a connection to the database file, data/semester.db
+     * @return Connection object that allows for communication with database file in question.
+     * @throws SQLException
+     * @throws IOException
+     */
+    public static Connection getConnection() throws SQLException, IOException {
+        if (new File("data/semester.db").exists()) {
+            return DriverManager.getConnection("jdbc:sqlite:data/semester.db");
+        }else {
+            File directory = new File("data");
+            boolean success = directory.mkdir();
+            File f = new File("data/semester.db");
+            boolean success2 = f.createNewFile();
+            return DriverManager.getConnection("jdbc:sqlite:data/semester.db");
+        }
+        
     }
 
+    /**
+     * This is supposed to conditionally refresh the database (cause it doesn't make sense to refresh the database every day).
+     * So the first day of every month or every 2 weeks would make sense (but I've been too lazy to actually get this working).
+     * @return
+     */
 	public static boolean checkDB() {
 		return true;
-	}
-
-	public static ArrayList<Event> getCourseDay() throws SQLException, FileNotFoundException {
+    }
+    
+    /**
+     * Gets the courses for the current day
+     * @return
+     * @throws SQLException
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+	public static ArrayList<Event> getCourseDay() throws SQLException, FileNotFoundException, IOException {
         Connection conn = getConnection();
         Gson gson = new Gson();
         ArrayList<Event> courseday = new ArrayList<Event>();
         String classpathDirectory = DBUtils.getClasspathDir();
-        BufferedReader br = new BufferedReader(new FileReader(classpathDirectory + "\\data\\week.json"));
+        BufferedReader br = new BufferedReader(new FileReader(classpathDirectory + "\\config\\week.json"));
         
         Day[] week = gson.fromJson(br, Day[].class);
 
@@ -136,7 +188,6 @@ public class DBUtils {
         String numericalDate = format1.format(ldt);
         //This is for creating a string to compare to the day names in week.json
         String td = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date);
-
 
         for (Day d : week) {
             if (d.getDay().equals(td)) {
@@ -162,7 +213,7 @@ public class DBUtils {
                 }
             }
             
-            
+        
 
         }catch (SQLException e) {
             System.out.println(e);
@@ -175,7 +226,8 @@ public class DBUtils {
     }
 
     private static String getClasspathDir() {
-        String classpath = System.getProperty("java.class.path", ".");
+        String classpath = System.getProperty("user.dir");
+        /* String classpath = System.getProperty("java.class.path", ".");
         String[] splitClasspathDir = classpath.split(";");
         String classpathDirectory = "";
         for (String s : splitClasspathDir) {
@@ -186,7 +238,7 @@ public class DBUtils {
                     classpathDirectory = matcher.group(1);
                 }
             }
-        }
-        return classpathDirectory;
+        } */
+        return classpath;
     }
 }

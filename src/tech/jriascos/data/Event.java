@@ -12,6 +12,16 @@ public class Event {
     private String description;
     private String passcode;
 
+    /**
+     * Creates an event object, which follows the parameters found in the JSON that comes back from the API.
+     * @param id 
+     * @param title
+     * @param start_at
+     * @param end_at
+     * @param all_day_date
+     * @param description
+     * @param passcode
+     */
     public Event(String id, String title, String start_at, String end_at, String all_day_date, String description, String passcode) {
         this.id = id;
         this.title = title;

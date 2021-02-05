@@ -2,6 +2,13 @@ package tech.jriascos.data;
 
 import java.sql.ResultSet;
 
+
+/**
+ * This java file is in charge of representing a course that a user may be taking on canvas. The parameter names
+ * are identical to those found when making the api call and getting the JSON data back.
+ * @author Joseph Riascos
+ */
+
 public class Course {
     private String id;
     private String name;

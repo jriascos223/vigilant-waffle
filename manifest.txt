@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Created-By: jriascos223
+Main-Class: tech.jriascos.runtime.Fix
+Class-Path: gson-2.8.6.jar sqlite-jdbc-3.28.0.jar
